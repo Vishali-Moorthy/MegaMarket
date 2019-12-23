@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.store.stock.constant.Constant;
+import com.store.stock.constant.AppConstant;
 import com.store.stock.entity.Product;
 import com.store.stock.exception.ProductNotFoundException;
 import com.store.stock.repository.ProductRepository;
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 			return product.get();
 		} else {
 			log.error("getProduct service method - ProductNotFoundException occurs");
-			throw new ProductNotFoundException(Constant.PRODUCT_NOT_FOUND);
+			throw new ProductNotFoundException(AppConstant.PRODUCT_NOT_FOUND);
 		}
 	}
 	

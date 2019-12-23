@@ -42,7 +42,7 @@ public class ProductControllerTest {
 	}
 	
 	@Test
-	public void testSearchProduct() {
+	public void testSearchProduct() throws ProductNotFoundException {
 		List<Product> products = new ArrayList<>();
 		products.add(product);
 		Mockito.when(productService.searchProduct("pen")).thenReturn(products);
@@ -50,6 +50,14 @@ public class ProductControllerTest {
 		
 		assertNotNull(result);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
+	}
+	
+	@Test(expected = ProductNotFoundException.class)
+	public void testSearchProductForNegative() throws ProductNotFoundException {
+		List<Product> products = new ArrayList<>();
+		products.add(product);
+		Mockito.when(productService.searchProduct("pen")).thenReturn(products);
+		productController.searchProduct(null);
 	}
 	
 	@Test

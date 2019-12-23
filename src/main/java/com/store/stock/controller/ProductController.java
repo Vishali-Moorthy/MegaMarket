@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.store.stock.constant.AppConstant;
 import com.store.stock.entity.Product;
 import com.store.stock.exception.ProductNotFoundException;
 import com.store.stock.service.ProductService;
+
 /**
  * This controller is used to get the product details
  * 
@@ -29,8 +31,7 @@ import com.store.stock.service.ProductService;
 @RequestMapping("/products")
 @CrossOrigin
 public class ProductController {
-	
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
 	/**
@@ -44,11 +45,18 @@ public class ProductController {
 	 * 
 	 * @param searchValue is the productName for searching
 	 * @return the list of products
+	 * @throws ProductNotFoundException
 	 */
 	@GetMapping
-	public ResponseEntity<List<Product>> searchProduct(@RequestParam String searchValue) {
+	public ResponseEntity<List<Product>> searchProduct(@RequestParam String searchValue)
+			throws ProductNotFoundException {
 		log.info("searchProduct controller method - searching the product");
-		return new ResponseEntity<>(productService.searchProduct(searchValue), HttpStatus.OK);
+		if (searchValue == null) {
+			log.error("searchProduct controller method - ProductNotFoundException occurs");
+			throw new ProductNotFoundException(AppConstant.PRODUCT_NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(productService.searchProduct(searchValue), HttpStatus.OK);
+		}
 	}
 
 	/**

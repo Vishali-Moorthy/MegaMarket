@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.store.stock.constant.Constant;
+import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.UserLoginDto;
 import com.store.stock.dto.UserLoginResponseDto;
 import com.store.stock.exception.UserNotFoundException;
@@ -53,9 +53,9 @@ public class UserController {
 			throws UserNotFoundException {
 		log.info("loginUser controller method - login the user");
 		UserLoginResponseDto userLoginResponseDto = userService.loginUser(userLoginDto);
-		userLoginResponseDto.setMessage(Constant.LOGIN_SUCCESS_MESSAGE);
-		userLoginResponseDto.setStatusCode(Constant.LOGIN_SUCCESS_CODE);
-		userLoginResponseDto.setLoginType(Constant.LOGIN_TYPE);
+		userLoginResponseDto.setMessage(AppConstant.LOGIN_SUCCESS_MESSAGE);
+		userLoginResponseDto.setStatusCode(AppConstant.LOGIN_SUCCESS_CODE);
+		userLoginResponseDto.setLoginType(AppConstant.LOGIN_TYPE);
 		return new ResponseEntity<>(userLoginResponseDto, HttpStatus.OK);
 	}
 }

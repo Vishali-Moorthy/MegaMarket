@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 
-import com.store.stock.constant.Constant;
+import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.UserLoginDto;
 import com.store.stock.dto.UserLoginResponseDto;
 import com.store.stock.exception.UserNotFoundException;
@@ -33,9 +33,9 @@ public class UserControllerTest {
 	@Before
 	public void setup() {
 		userLoginResponseDto = new UserLoginResponseDto();
-		userLoginResponseDto.setMessage(Constant.LOGIN_SUCCESS_MESSAGE);
-		userLoginResponseDto.setStatusCode(Constant.LOGIN_SUCCESS_CODE);
-		userLoginResponseDto.setLoginType(Constant.LOGIN_TYPE);
+		userLoginResponseDto.setMessage(AppConstant.LOGIN_SUCCESS_MESSAGE);
+		userLoginResponseDto.setStatusCode(AppConstant.LOGIN_SUCCESS_CODE);
+		userLoginResponseDto.setLoginType(AppConstant.LOGIN_TYPE);
 
 		userLoginDto = new UserLoginDto();
 		userLoginDto.setPassword("vishali");
@@ -48,7 +48,7 @@ public class UserControllerTest {
 		Mockito.when(userService.loginUser(userLoginDto)).thenReturn(userLoginResponseDto);
 		ResponseEntity<UserLoginResponseDto> result = userController.loginUser(userLoginDto);
 		assertNotNull(userLoginResponseDto);
-		assertEquals(Constant.LOGIN_SUCCESS_CODE, result.getStatusCodeValue());
+		assertEquals(AppConstant.LOGIN_SUCCESS_CODE, result.getStatusCodeValue());
 
 	}
 }
