@@ -50,6 +50,17 @@ public class ProductServiceTest {
 		assertNotNull(result);
 		assertEquals(products, result);
 	}
+	
+	@Test
+	public void testSearchProductForALL() {
+		List<Product> products = new ArrayList<>();
+		products.add(product);
+		Mockito.when(productRepository.findAll()).thenReturn(products);
+		List<Product> result = productServiceImpl.searchProduct("ALL");
+
+		assertNotNull(result);
+		assertEquals(products, result);
+	}
 
 
 	@Test

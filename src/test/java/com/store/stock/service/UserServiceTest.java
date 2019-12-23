@@ -62,4 +62,11 @@ public class UserServiceTest {
 		assertNotNull(userLoginResponseDto);
 		assertEquals("vishali@gmail.com", result.getEmailId());
 	}
+	
+	@Test(expected = UserNotFoundException.class)
+	public void testLoginUserForUserNotFoundException() throws UserNotFoundException {
+		Mockito.when(userRepository.findByEmailIdAndPassword(userLoginDto.getUserId(), userLoginDto.getPassword()))
+				.thenReturn(Optional.ofNullable(null));
+		userServiceImpl.loginUser(userLoginDto);
+	}
 }

@@ -1,13 +1,16 @@
 package com.store.stock;
 
+import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MegaMarketApplicationTests {
+public class MegaMarketApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void applicationTest() {
+		MegaMarketApplication.main(new String[] {});
+	    assertTrue(true);
 	}
 
 }

@@ -8,7 +8,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	ProductRepository productRepository;
 
@@ -146,16 +145,13 @@ public class OrderServiceImpl implements OrderService {
 
 		// Call the Rest Template for Update the transaction details.
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "http://localhost:8081/creditcard/transactions";
 		TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
 		transactionRequestDto.setCardNumber(validateOtpDto.getCardNumber());
 		transactionRequestDto.setTransactionAmount(order.get().getAmount());
 		transactionRequestDto.setDescription(order.get().getProduct().getDescription());
 		transactionRequestDto.setUserId(validateOtpDto.getUserId());
-		ResponseEntity<TransactionResponseDto> response = restTemplate.postForEntity(url, transactionRequestDto,
+		restTemplate.postForEntity(AppConstant.CREATE_TRANSACTION_URL, transactionRequestDto,
 				TransactionResponseDto.class);
-		System.out.println("response body::: " + response.getBody());
-
 	}
 
 	/**

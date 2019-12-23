@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> searchProduct(String searchValue) {
 		log.info("searchProduct service method - searching the product");
-		if(searchValue.equalsIgnoreCase("All")) {
+		if(searchValue.equalsIgnoreCase(AppConstant.PRODUCT_ALL)) {
 			return productRepository.findAll();
 		} else {
 			return productRepository.findAllByProductNameContains(searchValue);
