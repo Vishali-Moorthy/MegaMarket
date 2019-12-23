@@ -2,8 +2,11 @@ package com.store.stock.service;
 
 import java.util.List;
 
+import com.store.stock.dto.BuyProductRequestDto;
+import com.store.stock.dto.ValidateOtpDto;
 import com.store.stock.entity.Order;
 import com.store.stock.exception.OrderNotFoundException;
+import com.store.stock.exception.ProductNotFoundException;
 import com.store.stock.exception.UserNotFoundException;
 
 /**
@@ -25,4 +28,9 @@ public interface OrderService {
 	 */
 	List<Order> viewMyOrder(Integer userId) throws OrderNotFoundException, UserNotFoundException;
 
+	public void buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
+			throws ProductNotFoundException, UserNotFoundException;
+
+	public void validateOtp(Integer orderId, ValidateOtpDto validateOtpDto)
+			throws UserNotFoundException, OrderNotFoundException;
 }

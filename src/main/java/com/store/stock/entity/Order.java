@@ -24,6 +24,7 @@ public class Order {
 	private Integer orderId;
 	private Double amount;
 	private LocalDate orderDate;
+	private Integer otpValue;
 	@ManyToOne
 	@JoinColumn(name = "productId")
 	private Product product;
