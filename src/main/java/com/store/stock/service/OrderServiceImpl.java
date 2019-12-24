@@ -72,16 +72,19 @@ public class OrderServiceImpl implements OrderService {
 	public List<Order> viewMyOrder(Integer userId) throws OrderNotFoundException, UserNotFoundException {
 		log.info("viewMyOrder service method - viewing the orders");
 		Optional<User> user = userRepository.findById(userId);
-		List<Order> orders = orderRepository.findAllByUser(user.get());
 		if (!user.isPresent()) {
 			log.error("viewMyOrder service method - UserNotFoundException occurs");
 			throw new UserNotFoundException(AppConstant.USER_NOT_FOUND);
-		} else if (orders.isEmpty()) {
+		}else {
+		List<Order> orders = orderRepository.findAllByUser(user.get());
+		  if (orders.isEmpty()) {
 			log.error("viewMyOrder service method - OrderNotFoundException occurs");
 			throw new OrderNotFoundException(AppConstant.ORDER_NOT_FOUND);
 		} else {
 			return orders;
 		}
+		}
+		
 	}
 
 	/**
