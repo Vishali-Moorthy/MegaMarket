@@ -6,6 +6,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import com.store.stock.dto.BuyProductRequestDto;
+import com.store.stock.dto.OrderResponseDto;
 import com.store.stock.dto.ValidateOtpDto;
 import com.store.stock.entity.Order;
 import com.store.stock.exception.OrderNotFoundException;
@@ -31,7 +32,7 @@ public interface OrderService {
 	 */
 	List<Order> viewMyOrder(Integer userId) throws OrderNotFoundException, UserNotFoundException;
 
-	public void buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
+	public OrderResponseDto buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
 			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException;
 
 	public void validateOtp(Integer orderId, ValidateOtpDto validateOtpDto)

@@ -1,9 +1,12 @@
 package com.store.stock.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.mail.MessagingException;
@@ -32,7 +35,7 @@ import com.store.stock.repository.OrderRepository;
 import com.store.stock.repository.ProductRepository;
 import com.store.stock.repository.UserRepository;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class OrderServiceImplTest {
 
 	@InjectMocks
@@ -52,7 +55,7 @@ public class OrderServiceImplTest {
 
 	@Mock
 	MailService mailService;
-	
+
 	BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto();
 	ValidateOtpDto validateOtpDto = new ValidateOtpDto();
 	TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
@@ -73,6 +76,8 @@ public class OrderServiceImplTest {
 		product.setProductName("Pen");
 		order.setProduct(product);
 		order.setOrderId(1);
+
+		order.setUser(user);
 	}
 
 	@Test(expected = ProductNotFoundException.class)
@@ -122,4 +127,31 @@ public class OrderServiceImplTest {
 		orderServiceImpl.validateOtp(1, validateOtpDto);
 	}
 
+	@Test
+	public void testViewMyOrder() throws OrderNotFoundException, UserNotFoundException {
+
+		User user = new User();
+		user.setUserId(1);
+
+		List<Order> orders = new ArrayList<>();
+		orders.add(order);
+		Mockito.when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		Mockito.when(orderRepository.findAllByUser(user)).thenReturn(orders);
+		List<Order> result = orderServiceImpl.viewMyOrder(1);
+		assertNotNull(result);
+	}
+
+	@Test(expected = UserNotFoundException.class)
+	public void testViewMyOrderForUserNotFound() throws OrderNotFoundException, UserNotFoundException {
+		when(userRepository.findById(1)).thenReturn(Optional.ofNullable(null));
+		orderServiceImpl.viewMyOrder(1);
+	}
+
+	@Test(expected = OrderNotFoundException.class)
+	public void testViewMyOrderForOrderNotFound() throws OrderNotFoundException, UserNotFoundException {
+		List<Order> orders = new ArrayList<>();
+		when(userRepository.findById(1)).thenReturn(Optional.of(user));
+		when(orderRepository.findAllByUser(user)).thenReturn(orders);
+		orderServiceImpl.viewMyOrder(1);
+	}
 }

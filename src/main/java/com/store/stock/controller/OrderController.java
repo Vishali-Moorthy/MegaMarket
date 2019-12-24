@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.BuyProductRequestDto;
+import com.store.stock.dto.OrderResponseDto;
 import com.store.stock.dto.ResponseDto;
 import com.store.stock.dto.ValidateOtpDto;
 import com.store.stock.entity.Order;
@@ -88,13 +89,12 @@ public class OrderController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@PostMapping("/{userId}")
-	public ResponseEntity<ResponseDto> buyProduct(@PathVariable String userId,
+	public ResponseEntity<OrderResponseDto> buyProduct(@PathVariable String userId,
 			@Valid @RequestBody BuyProductRequestDto buyProductRequestDto)
 			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		log.info("validate otp value...");
-		ResponseDto responseDto = new ResponseDto();
 		// Buy the product service call.
-		orderService.buyProduct(userId, buyProductRequestDto);
+		OrderResponseDto responseDto = orderService.buyProduct(userId, buyProductRequestDto);
 		responseDto.setMessage(AppConstant.BUY_SUCCESS_OTP_SEND);
 		responseDto.setStatusCode(HttpStatus.CREATED.value());
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);

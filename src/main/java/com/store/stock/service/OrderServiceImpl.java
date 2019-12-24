@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.BuyProductRequestDto;
 import com.store.stock.dto.Mail;
+import com.store.stock.dto.OrderResponseDto;
 import com.store.stock.dto.TransactionRequestDto;
 import com.store.stock.dto.TransactionResponseDto;
 import com.store.stock.dto.ValidateOtpDto;
@@ -75,16 +76,16 @@ public class OrderServiceImpl implements OrderService {
 		if (!user.isPresent()) {
 			log.error("viewMyOrder service method - UserNotFoundException occurs");
 			throw new UserNotFoundException(AppConstant.USER_NOT_FOUND);
-		}else {
-		List<Order> orders = orderRepository.findAllByUser(user.get());
-		  if (orders.isEmpty()) {
-			log.error("viewMyOrder service method - OrderNotFoundException occurs");
-			throw new OrderNotFoundException(AppConstant.ORDER_NOT_FOUND);
 		} else {
-			return orders;
+			List<Order> orders = orderRepository.findAllByUser(user.get());
+			if (orders.isEmpty()) {
+				log.error("viewMyOrder service method - OrderNotFoundException occurs");
+				throw new OrderNotFoundException(AppConstant.ORDER_NOT_FOUND);
+			} else {
+				return orders;
+			}
 		}
-		}
-		
+
 	}
 
 	/**
@@ -101,9 +102,10 @@ public class OrderServiceImpl implements OrderService {
 	 * @throws UnsupportedEncodingException
 	 */
 	@Override
-	public void buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
+	public OrderResponseDto buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
 			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		log.info("buy a product based on user input...");
+		OrderResponseDto orderResponseDto = new OrderResponseDto();
 		// Check product detail is present or not.
 		Optional<Product> product = productRepository.findById(buyProductRequestDto.getProductId());
 		if (!product.isPresent()) {
@@ -128,8 +130,10 @@ public class OrderServiceImpl implements OrderService {
 		Integer otpValue = generateOtpValue();
 		order.setOtpValue(otpValue);
 
-		orderRepository.save(order);
+		order = orderRepository.save(order);
 
+		orderResponseDto.setOrderId(order.getOrderId());
+		
 		Mail mail = new Mail();
 		mail.setMailFrom(AppConstant.EMAIL_ADDRESS);
 		mail.setMailTo(user.get().getEmailId());
@@ -139,6 +143,7 @@ public class OrderServiceImpl implements OrderService {
 
 		// Send Email Service.
 		mailService.sendEmail(mail);
+		return orderResponseDto;
 	}
 
 	/**
