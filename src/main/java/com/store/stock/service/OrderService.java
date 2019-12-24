@@ -1,6 +1,9 @@
 package com.store.stock.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import com.store.stock.dto.BuyProductRequestDto;
 import com.store.stock.dto.ValidateOtpDto;
@@ -29,7 +32,7 @@ public interface OrderService {
 	List<Order> viewMyOrder(Integer userId) throws OrderNotFoundException, UserNotFoundException;
 
 	public void buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
-			throws ProductNotFoundException, UserNotFoundException;
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException;
 
 	public void validateOtp(Integer orderId, ValidateOtpDto validateOtpDto)
 			throws UserNotFoundException, OrderNotFoundException;

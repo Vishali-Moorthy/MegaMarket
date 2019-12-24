@@ -2,6 +2,10 @@ package com.store.stock.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.mail.MessagingException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +45,8 @@ public class OrderControllerTest {
 	}
 
 	@Test
-	public void testBuyProduct() throws ProductNotFoundException, UserNotFoundException {
+	public void testBuyProduct()
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		ResponseEntity<ResponseDto> response = orderController.buyProduct("moorthy127@gmail.com", buyProductRequestDto);
 		assertEquals(HttpStatus.CREATED.value(), response.getBody().getStatusCode());
 	}

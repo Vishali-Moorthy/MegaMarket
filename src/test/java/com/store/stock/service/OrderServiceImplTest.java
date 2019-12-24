@@ -3,7 +3,10 @@ package com.store.stock.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
+
+import javax.mail.MessagingException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
 
+import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.BuyProductRequestDto;
 import com.store.stock.dto.TransactionRequestDto;
 import com.store.stock.dto.TransactionResponseDto;
@@ -46,6 +50,9 @@ public class OrderServiceImplTest {
 	@Mock
 	RestTemplate restTemplate;
 
+	@Mock
+	MailService mailService;
+	
 	BuyProductRequestDto buyProductRequestDto = new BuyProductRequestDto();
 	ValidateOtpDto validateOtpDto = new ValidateOtpDto();
 	TransactionRequestDto transactionRequestDto = new TransactionRequestDto();
@@ -69,23 +76,27 @@ public class OrderServiceImplTest {
 	}
 
 	@Test(expected = ProductNotFoundException.class)
-	public void testBuyProductForProductNotFound() throws ProductNotFoundException, UserNotFoundException {
+	public void testBuyProductForProductNotFound()
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		when(productRepository.findById(buyProductRequestDto.getProductId())).thenReturn(Optional.ofNullable(null));
 		orderServiceImpl.buyProduct("moorthy127@gmail.com", buyProductRequestDto);
 	}
 
 	@Test(expected = UserNotFoundException.class)
-	public void testBuyProductForUserNotFound() throws ProductNotFoundException, UserNotFoundException {
+	public void testBuyProductForUserNotFound()
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		when(productRepository.findById(buyProductRequestDto.getProductId())).thenReturn(Optional.of(product));
 		when(userRepository.findByEmailId("moorthy127@gmail.com")).thenReturn(Optional.ofNullable(null));
 		orderServiceImpl.buyProduct("moorthy127@gmail.com", buyProductRequestDto);
 	}
 
 	@Test
-	public void testBuyProduct() throws ProductNotFoundException, UserNotFoundException {
+	public void testBuyProduct()
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		when(productRepository.findById(buyProductRequestDto.getProductId())).thenReturn(Optional.of(product));
 		when(userRepository.findByEmailId("moorthy127@gmail.com")).thenReturn(Optional.of(user));
 		when(orderRepository.save(Mockito.any())).thenReturn(order);
+		when(mailService.sendEmail(Mockito.any())).thenReturn(AppConstant.SUCCESS);
 		orderServiceImpl.buyProduct("moorthy127@gmail.com", buyProductRequestDto);
 		assertEquals("moorthy127@gmail.com", user.getEmailId());
 	}

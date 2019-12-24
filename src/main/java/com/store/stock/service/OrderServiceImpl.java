@@ -1,8 +1,11 @@
 package com.store.stock.service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import javax.mail.MessagingException;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.store.stock.constant.AppConstant;
 import com.store.stock.dto.BuyProductRequestDto;
+import com.store.stock.dto.Mail;
 import com.store.stock.dto.TransactionRequestDto;
 import com.store.stock.dto.TransactionResponseDto;
 import com.store.stock.dto.ValidateOtpDto;
@@ -53,6 +57,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	ProductRepository productRepository;
 
+	@Autowired
+	MailService mailService;
+
 	/**
 	 * viewMyOrder method is used to view the products ordered by the user
 	 * 
@@ -83,14 +90,16 @@ public class OrderServiceImpl implements OrderService {
 	 * @param userId
 	 * @param buyProductRequestDto
 	 * @return
-	 * @throws ProductNotFoundException if product is not found we can throw the
-	 *                                  productnotfoundexception.
-	 * @throws UserNotFoundException    if user is not found we can throw the
-	 *                                  usernotfoundexception.
+	 * @throws ProductNotFoundException     if product is not found we can throw the
+	 *                                      productnotfoundexception.
+	 * @throws UserNotFoundException        if user is not found we can throw the
+	 *                                      usernotfoundexception.
+	 * @throws MessagingException
+	 * @throws UnsupportedEncodingException
 	 */
 	@Override
 	public void buyProduct(String userId, BuyProductRequestDto buyProductRequestDto)
-			throws ProductNotFoundException, UserNotFoundException {
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		log.info("buy a product based on user input...");
 		// Check product detail is present or not.
 		Optional<Product> product = productRepository.findById(buyProductRequestDto.getProductId());
@@ -118,8 +127,15 @@ public class OrderServiceImpl implements OrderService {
 
 		orderRepository.save(order);
 
+		Mail mail = new Mail();
+		mail.setMailFrom(AppConstant.EMAIL_ADDRESS);
+		mail.setMailTo(user.get().getEmailId());
+		mail.setMailSubject(AppConstant.EMAIL_SUBJECT);
+		mail.setMailContent(AppConstant.EMAIL_BODY.concat(" ")
+				.concat(String.valueOf(otpValue).concat(" ").concat(AppConstant.EMAIL_BODY_1)));
+
 		// Send Email Service.
-		// sendEmailService.sendEmail("moorthy127@gmail.com", null, null);
+		mailService.sendEmail(mail);
 	}
 
 	@Override

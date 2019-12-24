@@ -1,7 +1,9 @@
 package com.store.stock.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -78,15 +80,17 @@ public class OrderController {
 	 * @param userId
 	 * @param buyProductRequestDto
 	 * @return
-	 * @throws ProductNotFoundException if product is not found we can throw the
-	 *                                  productnotfoundexception.
-	 * @throws UserNotFoundException    if user is not found we can throw the
-	 *                                  usernotfoundexception.
+	 * @throws ProductNotFoundException     if product is not found we can throw the
+	 *                                      productnotfoundexception.
+	 * @throws UserNotFoundException        if user is not found we can throw the
+	 *                                      usernotfoundexception.
+	 * @throws MessagingException
+	 * @throws UnsupportedEncodingException
 	 */
 	@PostMapping("/{userId}")
 	public ResponseEntity<ResponseDto> buyProduct(@PathVariable String userId,
 			@Valid @RequestBody BuyProductRequestDto buyProductRequestDto)
-			throws ProductNotFoundException, UserNotFoundException {
+			throws ProductNotFoundException, UserNotFoundException, MessagingException, UnsupportedEncodingException {
 		log.info("validate otp value...");
 		ResponseDto responseDto = new ResponseDto();
 		// Buy the product service call.
