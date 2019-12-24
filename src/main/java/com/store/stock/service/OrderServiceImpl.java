@@ -141,6 +141,16 @@ public class OrderServiceImpl implements OrderService {
 		mailService.sendEmail(mail);
 	}
 
+	/**
+	 * validate the otp value based on the order id value.
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @param validateOtpDto
+	 * @return
+	 * @throws UserNotFoundException
+	 * @throws OrderNotFoundException
+	 */
 	@Override
 	public void validateOtp(Integer orderId, ValidateOtpDto validateOtpDto)
 			throws UserNotFoundException, OrderNotFoundException {

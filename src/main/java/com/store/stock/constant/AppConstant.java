@@ -6,7 +6,7 @@ public class AppConstant {
 
 	}
 
-	public static final String LOGIN_TYPE = "CreditCard";
+	public static final String LOGIN_TYPE = "MegaMarket";
 
 	public static final Integer LOGIN_SUCCESS_CODE = 200;
 	public static final String SUCCESS = "Success";

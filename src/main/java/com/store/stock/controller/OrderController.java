@@ -69,7 +69,7 @@ public class OrderController {
 			log.error("viewMyOrder controller method - UserNotFoundException occurs");
 			throw new UserNotFoundException(AppConstant.USER_NOT_FOUND);
 		} else {
-			return new ResponseEntity<List<Order>>(orderService.viewMyOrder(userId), HttpStatus.OK);
+			return new ResponseEntity<>(orderService.viewMyOrder(userId), HttpStatus.OK);
 		}
 
 	}
@@ -107,14 +107,12 @@ public class OrderController {
 	 * @param orderId
 	 * @param validateOtpDto
 	 * @return
-	 * @throws ProductNotFoundException
 	 * @throws UserNotFoundException
 	 * @throws OrderNotFoundException
 	 */
 	@PutMapping("/{orderId}")
 	public ResponseEntity<ResponseDto> validateOtp(@PathVariable Integer orderId,
-			@Valid @RequestBody ValidateOtpDto validateOtpDto)
-			throws ProductNotFoundException, UserNotFoundException, OrderNotFoundException {
+			@Valid @RequestBody ValidateOtpDto validateOtpDto) throws UserNotFoundException, OrderNotFoundException {
 		log.info("buy a product based on the userId");
 		ResponseDto responseDto = new ResponseDto();
 		// Buy the product service call.
